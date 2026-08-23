@@ -121,24 +121,26 @@ p{max-width:36rem;text-wrap:pretty}
 .plain p{margin:0;font-size:.9375rem}
 .plain p+p{margin-top:.6rem}
 
+
 /* ---------- compatibility ---------- */
-.people{display:grid;gap:.6rem;max-width:34rem;margin-top:2.5rem}
-.person{background:var(--raise);border:1px solid var(--edge);border-radius:4px;
-  padding:.9rem 1rem}
-.person .top{display:flex;align-items:baseline;gap:.55rem}
-.person .nm{font-weight:600}
-.person .rel{font-size:.8125rem;color:var(--ink-3)}
-.person .sc{margin-left:auto;font-family:'Bodoni Moda',Didot,Georgia,serif;
-  font-size:1.7rem;line-height:1;font-variant-numeric:tabular-nums;color:var(--ink)}
-.person .bd{font-family:'IBM Plex Mono',monospace;font-size:.5625rem;font-weight:500;
-  text-transform:uppercase;letter-spacing:.1em;color:var(--ink-3);
-  border:1px solid var(--edge);border-radius:2px;padding:.2em .45em}
-.person .bd.hi{color:var(--brass);border-color:rgba(217,169,78,.45)}
-.dims{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin-top:.6rem}
-.dim span{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.1em;
+.pair{background:var(--raise);border:1px solid var(--edge);border-radius:4px;
+  padding:.9rem 1rem;margin-bottom:.55rem}
+.pair .top{display:flex;align-items:baseline;gap:.55rem}
+.pair .nm{font-weight:600}
+.pair .rel{font-size:.8125rem;color:var(--ink-3)}
+.pair .val{margin-left:auto;font-family:'Bodoni Moda',Didot,Georgia,serif;
+  font-size:1.65rem;line-height:1;font-variant-numeric:tabular-nums}
+.tagb{font-family:'IBM Plex Mono',monospace;font-size:.5625rem;font-weight:500;
+  text-transform:uppercase;letter-spacing:.1em;padding:.22em .5em;border-radius:2px;
+  background:rgba(255,255,255,.06);color:var(--ink-2)}
+.tagb.hot{background:rgba(217,169,78,.14);color:var(--brass)}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:.65rem}
+.trio .k{font-family:'IBM Plex Mono',monospace;font-size:.5rem;letter-spacing:.1em;
   text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between}
-.dim i{display:block;height:3px;background:var(--edge);border-radius:2px;margin-top:.25rem}
-.dim i b{display:block;height:100%;background:var(--brass);border-radius:2px}
+.trio .bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;
+  margin-top:.25rem;overflow:hidden}
+.trio .bar i{display:block;height:100%;background:var(--brass)}
+.stack{max-width:30rem;margin-top:2.5rem}
 
 footer{border-top:1px solid var(--edge);padding-block:2.5rem 4rem;
   font-size:.8125rem;color:var(--ink-3)}
@@ -155,7 +157,7 @@ footer a{color:var(--ink-2)}
 <main>
   <div class="wrap hero">
     <h1>It remembers <em class="tw">you.</em></h1>
-    <p class="lede">Every astrology app forgets you the moment you close it. My Sign checks in each morning, keeps what you tell it, and reads today against your actual life — not a twelfth of the population.</p>
+    <p class="lede">Every astrology app forgets you the moment you close it. My Sign checks in each morning, keeps what you tell it, and reads today against your actual life — not a twelfth of the population. It remembers everyone you've checked, too.</p>
     <a class="cta" href="mailto:hello@mysign.app?subject=My%20Sign%20early%20access&body=Hi%20%E2%80%94%20I%27d%20like%20early%20access.">Ask for early access</a>
     <p class="under">In private testing · iOS first</p>
   </div>
@@ -192,47 +194,35 @@ footer a{color:var(--ink-2)}
     <p class="caption">Half of that needs a real ephemeris. The other half needs to have been listening since July. No other app has both.</p>
   </section>
 
+
   <section class="wrap">
     <p class="eyebrow">Compatibility</p>
-    <h2>Everyone you've ever wondered about, in one place.</h2>
-    <p class="dim">Add someone's birth details and you get a real synastry read — the aspects between your two charts, where their planets land in your houses, and a score. Then it keeps it. Six months later you can see the whole list at once, which is the part no other app can do.</p>
-    <ul class="starlist">
-      <li><strong>Three dimensions, not one number.</strong> Spark, ease, and staying power move independently. High spark with low ease is a real and recognisable thing, and averaging it away would throw out the interesting half.</li>
-      <li><strong>Fifty is an ordinary pair.</strong> Scores are measured against a reference distribution of ordinary pairs, so they mean something. Rare is about two percent. It is not a flattery machine.</li>
-      <li><strong>Every point is itemised.</strong> Tap a score and you get the contacts that produced it, with orbs. Nothing is asserted that the engine can't show you.</li>
-    </ul>
-    <div class="people">
-      <div class="person">
+    <h2>Three numbers, because it's never one.</h2>
+    <p class="dim">Check someone against your chart and you get spark, ease, and staying power separately — they are rarely the same answer, and averaging them into a single verdict throws away the part worth knowing.</p>
+    <div class="stack">
+      <div class="pair">
         <div class="top"><span class="nm">Theo</span><span class="rel">talking, five months</span>
-          <span class="bd">promising</span><span class="sc">54</span></div>
-        <div class="dims">
-          <div class="dim"><span>spark<b>68</b></span><i><b style="width:68%"></b></i></div>
-          <div class="dim"><span>ease<b>50</b></span><i><b style="width:50%"></b></i></div>
-          <div class="dim"><span>staying<b>44</b></span><i><b style="width:44%"></b></i></div>
-        </div>
+          <span class="tagb">promising</span><span class="val">54</span></div>
+        <div class="trio"><div><div class="k"><span>spark</span><span>68</span></div><div class="bar"><i style="width:68%"></i></div></div><div><div class="k"><span>ease</span><span>50</span></div><div class="bar"><i style="width:50%"></i></div></div><div><div class="k"><span>staying</span><span>44</span></div><div class="bar"><i style="width:44%"></i></div></div></div>
       </div>
-      <div class="person">
+      <div class="pair">
         <div class="top"><span class="nm">Jules</span><span class="rel">one date</span>
-          <span class="bd hi">strong</span><span class="sc">64</span></div>
-        <div class="dims">
-          <div class="dim"><span>spark<b>62</b></span><i><b style="width:62%"></b></i></div>
-          <div class="dim"><span>ease<b>69</b></span><i><b style="width:69%"></b></i></div>
-          <div class="dim"><span>staying<b>62</b></span><i><b style="width:62%"></b></i></div>
-        </div>
+          <span class="tagb hot">strong</span><span class="val">64</span></div>
+        <div class="trio"><div><div class="k"><span>spark</span><span>62</span></div><div class="bar"><i style="width:62%"></i></div></div><div><div class="k"><span>ease</span><span>69</span></div><div class="bar"><i style="width:69%"></i></div></div><div><div class="k"><span>staying</span><span>62</span></div><div class="bar"><i style="width:62%"></i></div></div></div>
       </div>
-      <div class="person">
+      <div class="pair">
         <div class="top"><span class="nm">Sam</span><span class="rel">coworker</span>
-          <span class="bd">hard going</span><span class="sc">33</span></div>
-        <div class="dims">
-          <div class="dim"><span>spark<b>52</b></span><i><b style="width:52%"></b></i></div>
-          <div class="dim"><span>ease<b>21</b></span><i><b style="width:21%"></b></i></div>
-          <div class="dim"><span>staying<b>26</b></span><i><b style="width:26%"></b></i></div>
-        </div>
+          <span class="tagb">hard going</span><span class="val">33</span></div>
+        <div class="trio"><div><div class="k"><span>spark</span><span>52</span></div><div class="bar"><i style="width:52%"></i></div></div><div><div class="k"><span>ease</span><span>21</span></div><div class="bar"><i style="width:21%"></i></div></div><div><div class="k"><span>staying</span><span>26</span></div><div class="bar"><i style="width:26%"></i></div></div></div>
       </div>
     </div>
-    <p class="caption">Real output from the engine, computed against one test chart. Nothing here is illustrative.</p>
+    <p class="caption">Fifty is an ordinary pair, not a bad grade. Scores are measured against a reference of ordinary pairs, so “rare” lands on about two percent of them — most apps hand out nineties to everybody, which tells you nothing.</p>
+    <ul class="starlist">
+      <li><strong>Every point is itemised.</strong> Tap a score and you get the contacts that produced it, with orbs. Nothing is asserted that the engine can't show you.</li>
+      <li><strong>Every reading is kept.</strong> A year from now you can look back at everyone you met, side by side, and see what you actually keep choosing.</li>
+    </ul>
   </section>
-
+  
   <section class="wrap">
     <p class="eyebrow">Plainly</p>
     <h2>What this isn't.</h2>
