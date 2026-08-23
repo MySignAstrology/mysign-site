@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>My Sign — a daily companion whose lens is astrology</title>
-<meta name="description" content="Not a horoscope. A companion that checks in each morning, remembers what you told it, and helps you decide.">
+<meta name="description" content="Not a horoscope. A companion that checks in each morning, remembers what you told it, scores who you meet, and helps you decide.">
 <link rel="icon" href="assets/mark.svg">
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
-<meta name="theme-color" content="#0E1020">
+<meta name="theme-color" content="#0B0D18">
 <meta property="og:title" content="My Sign">
-<meta property="og:description" content="Not a horoscope. A companion that remembers.">
+<meta property="og:description" content="Not a horoscope. A companion that remembers — every day, and everyone you've checked.">
 <meta property="og:image" content="assets/appicon.png">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -38,9 +38,23 @@ body{margin:0;background:var(--ground);color:var(--ink);
    was killing the vertical padding on header, section and footer. Splitting the
    axes makes the collision impossible rather than merely fixed. */
 
-/* ---------- ambient field ---------- */
-#stars{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.55}
+/* ---------- ambient field ----------
+   Three things stacked, cheapest first: a static nebula painted by CSS (no
+   per-frame cost), the canvas starfield over it, and content above both. */
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(58rem 40rem at 12% 6%,  rgba(96,74,168,.20), transparent 62%),
+    radial-gradient(46rem 34rem at 88% 26%, rgba(178,132,62,.13), transparent 60%),
+    radial-gradient(64rem 48rem at 46% 104%,rgba(44,64,150,.17), transparent 66%)}
+#stars{position:fixed;inset:0;z-index:0;pointer-events:none}
 main,header,footer{position:relative;z-index:1}
+
+/* a brass star instead of a bullet, wherever a list needs one */
+.starlist{list-style:none;padding:0;margin:1.5rem 0 0;max-width:36rem}
+.starlist li{position:relative;padding-left:1.6rem;margin-bottom:.7rem;color:var(--ink-2)}
+.starlist li::before{content:'';position:absolute;left:0;top:.55em;width:.7rem;height:.7rem;
+  background:var(--brass);
+  clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%)}
 
 /* ---------- nav ---------- */
 header{padding-block:1.5rem}
@@ -49,7 +63,14 @@ header{padding-block:1.5rem}
 .lockup b{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:500;font-size:1.35rem;letter-spacing:-.01em}
 
 /* ---------- hero ---------- */
-.hero{padding-block:5rem 4rem;max-width:44rem}
+.hero{padding-block:5rem 4rem;max-width:44rem;position:relative}
+h1 .tw{position:relative;display:inline-block}
+h1 .tw::after{content:'';position:absolute;right:-1.1em;top:.02em;width:.42em;height:.42em;
+  background:var(--brass-lit);opacity:.9;
+  clip-path:polygon(50% 0,58% 42%,100% 50%,58% 58%,50% 100%,42% 58%,0 50%,42% 42%);
+  animation:tw 4.5s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.35;transform:scale(.82)}50%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){h1 .tw::after{animation:none;opacity:.85}}
 h1{font-family:'Bodoni Moda',Didot,Georgia,serif;font-weight:500;
   font-size:clamp(3rem,9vw,6rem);line-height:.98;letter-spacing:-.025em;
   margin:0 0 1.5rem;text-wrap:balance}
@@ -135,7 +156,7 @@ footer a{color:var(--ink-2)}
 
 <main>
   <div class="wrap hero">
-    <h1>It remembers <em>you.</em></h1>
+    <h1>It remembers <em class="tw">you.</em></h1>
     <p class="lede">Every astrology app forgets you the moment you close it. My Sign checks in each morning, keeps what you tell it, and reads today against your actual life — not a twelfth of the population. It remembers everyone you've checked, too.</p>
     <a class="cta" href="mailto:hello@mysign.app?subject=My%20Sign%20early%20access&body=Hi%20%E2%80%94%20I%27d%20like%20early%20access.">Ask for early access</a>
     <p class="under">In private testing · iOS first</p>
@@ -196,8 +217,12 @@ footer a{color:var(--ink-2)}
       </div>
     </div>
     <p class="caption">Fifty is an ordinary pair, not a bad grade. Scores are measured against a reference of ordinary pairs, so “rare” lands on about two percent of them — most apps hand out nineties to everybody, which tells you nothing.</p>
-    <p class="dim" style="margin-top:1.5rem">And every reading is kept. A year from now you can look back at everyone you met, side by side, and see what you actually keep choosing.</p>
+    <ul class="starlist">
+      <li><strong>Every point is itemised.</strong> Tap a score and you get the contacts that produced it, with orbs. Nothing is asserted that the engine can't show you.</li>
+      <li><strong>Every reading is kept.</strong> A year from now you can look back at everyone you met, side by side, and see what you actually keep choosing.</li>
+    </ul>
   </section>
+  
   <section class="wrap">
     <p class="eyebrow">Plainly</p>
     <h2>What this isn't.</h2>
@@ -213,40 +238,112 @@ footer a{color:var(--ink-2)}
 </footer>
 
 <script>
-/* A slow field of stars. Canvas rather than a thousand DOM nodes, and it
-   stops entirely for anyone who asked for reduced motion. */
+/* A deep field: three parallax layers, mostly round stars with a scatter of
+   four-point brass sparkles borrowed from the mark, and a shooting star now and
+   then. One canvas, one rAF, and it holds completely still for anyone who asked
+   for reduced motion. */
 (() => {
   const c = document.getElementById('stars'), x = c.getContext('2d');
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let w, h, stars, raf;
+  const LAYERS = [
+    { n: .55, r: [0.4, 1.0], a: [.20, .50], par: 0.06 },   // far, faint, barely moves
+    { n: .30, r: [0.8, 1.7], a: [.35, .70], par: 0.16 },
+    { n: .15, r: [1.3, 2.6], a: [.55, .95], par: 0.34 },   // near, bright, drifts most
+  ];
+  let w, h, dpr, stars, shoot = null, nextShot = 4000;
 
   function build() {
-    w = c.width = innerWidth * devicePixelRatio;
-    h = c.height = innerHeight * devicePixelRatio;
-    c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px';
-    const n = Math.min(160, Math.round(innerWidth * innerHeight / 9000));
-    stars = Array.from({length: n}, () => ({
-      x: Math.random() * w, y: Math.random() * h,
-      r: (Math.random() * 1.1 + 0.3) * devicePixelRatio,
-      a: Math.random() * 0.5 + 0.15,
-      s: Math.random() * 0.7 + 0.25,          // twinkle speed
-      p: Math.random() * Math.PI * 2,
-    }));
+    dpr = Math.min(devicePixelRatio || 1, 2);
+    w = c.width = innerWidth * dpr;
+    h = c.height = innerHeight * dpr;
+    c.style.width = innerWidth + 'px';
+    c.style.height = innerHeight + 'px';
+    const total = Math.min(460, Math.round(innerWidth * innerHeight / 3400));
+    stars = [];
+    LAYERS.forEach(L => {
+      for (let i = 0; i < total * L.n; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h * 1.6,          // taller than the viewport, for parallax
+          r: (L.r[0] + Math.random() * (L.r[1] - L.r[0])) * dpr,
+          a: L.a[0] + Math.random() * (L.a[1] - L.a[0]),
+          par: L.par,
+          sp: Math.random() * 0.8 + 0.2,       // twinkle speed
+          ph: Math.random() * 6.283,
+          sparkle: Math.random() < 0.07,       // the brand mark, sprinkled in
+        });
+      }
+    });
   }
 
+  /* the four-point star from the logo, pinched at the waist */
+  function star4(cx, cy, r) {
+    const wst = r * 0.14, rv = r * 1.9, rh = r * 1.25;
+    x.beginPath();
+    x.moveTo(cx, cy - rv);
+    x.quadraticCurveTo(cx + wst, cy - wst, cx + rh, cy);
+    x.quadraticCurveTo(cx + wst, cy + wst, cx, cy + rv);
+    x.quadraticCurveTo(cx - wst, cy + wst, cx - rh, cy);
+    x.quadraticCurveTo(cx - wst, cy - wst, cx, cy - rv);
+    x.fill();
+  }
+
+  let last = 0;
   function frame(t) {
+    const dt = Math.min(64, t - last); last = t;
+    const sy = (scrollY || 0) * dpr;
+    const span = h * 1.6;
     x.clearRect(0, 0, w, h);
+
     for (const s of stars) {
-      const a = still ? s.a : s.a * (0.62 + 0.38 * Math.sin(t / 1000 * s.s + s.p));
+      let y = (s.y - sy * s.par) % span;
+      if (y < 0) y += span;
+      if (y > h + 8) continue;
+      const a = still ? s.a : s.a * (0.55 + 0.45 * Math.sin(t / 900 * s.sp + s.ph));
       x.globalAlpha = a;
-      x.fillStyle = a > 0.45 ? '#EFC97E' : '#C9CBE0';
-      x.beginPath(); x.arc(s.x, s.y, s.r, 0, 6.283); x.fill();
+      if (s.sparkle) {
+        x.fillStyle = '#EFC97E';
+        star4(s.x, y, s.r);
+      } else {
+        x.fillStyle = a > 0.62 ? '#F3EFE2' : '#C9CBE0';
+        x.beginPath(); x.arc(s.x, y, s.r, 0, 6.283); x.fill();
+      }
     }
-    if (!still) raf = requestAnimationFrame(frame);
+
+    if (!still) {
+      nextShot -= dt;
+      if (!shoot && nextShot <= 0) {
+        shoot = { x: Math.random() * w * .7, y: Math.random() * h * .45,
+                  len: (90 + Math.random() * 90) * dpr, life: 0,
+                  dur: 620 + Math.random() * 260, vx: 1, vy: 0.42 };
+        nextShot = 7000 + Math.random() * 9000;
+      }
+      if (shoot) {
+        shoot.life += dt;
+        const p = shoot.life / shoot.dur;
+        if (p >= 1) { shoot = null; }
+        else {
+          const travel = p * shoot.len * 4;
+          const hx = shoot.x + travel * shoot.vx, hy = shoot.y + travel * shoot.vy;
+          const tx = hx - shoot.len * shoot.vx,  ty = hy - shoot.len * shoot.vy;
+          const g = x.createLinearGradient(tx, ty, hx, hy);
+          g.addColorStop(0, 'rgba(239,201,126,0)');
+          g.addColorStop(1, 'rgba(239,201,126,' + (Math.sin(p * Math.PI) * .85).toFixed(3) + ')');
+          x.globalAlpha = 1; x.strokeStyle = g; x.lineWidth = 1.5 * dpr; x.lineCap = 'round';
+          x.beginPath(); x.moveTo(tx, ty); x.lineTo(hx, hy); x.stroke();
+        }
+      }
+      requestAnimationFrame(frame);
+    }
   }
 
-  addEventListener('resize', () => { build(); if (still) frame(0); });
-  build(); still ? frame(0) : (raf = requestAnimationFrame(frame));
+  let rt;
+  addEventListener('resize', () => {
+    clearTimeout(rt);
+    rt = setTimeout(() => { build(); if (still) frame(0); }, 150);
+  });
+  build();
+  still ? frame(0) : requestAnimationFrame(frame);
 })();
 </script>
 </body>
